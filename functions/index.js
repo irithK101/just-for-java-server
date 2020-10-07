@@ -13,6 +13,28 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
+app.get('/api/get-all-topic-statuses', (req, res) => {
+
+  (async () => {  
+
+    try {
+      const topicsRef = db.collection('items').doc(req.query.id).collection('topics');
+      const doc = await topicsRef.get();
+      var data = {};
+      doc.forEach(item => {
+        data[item.id] = item.data().status;
+      });
+      console.log(data);
+      return res.status(200).send(data);
+    } catch(error) {
+      console.log(error);
+      return res.status(500).send(error);
+    }
+
+  })();
+
+});
+
 app.get('/api/get-topic-status', (req, res) => {
 
   (async () => {
